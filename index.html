@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Мои записки</title>
+    <meta charset="UTF-8">
+    <style>
+        body { 
+            font-family: Arial; 
+            max-width: 800px; 
+            margin: 20px auto; 
+            padding: 0 20px; 
+        }
+        #search { 
+            width: 100%; 
+            padding: 10px; 
+            font-size: 16px; 
+            margin-bottom: 20px; 
+            border: 2px solid #ddd; 
+            border-radius: 5px;
+        }
+        #notes { 
+            border: 2px solid #eee; 
+            padding: 15px; 
+            min-height: 300px; 
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+        mark { 
+            background: yellow; 
+            color: black; 
+        }
+        button {
+            padding: 8px 15px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>📝 Мои записки</h1>
+    <input type="text" id="search" placeholder="Найти слово...">
+    <div id="notes" contenteditable="true"></div>
+    <script>
+        // Поиск и подсветка
+        document.getElementById('search').addEventListener('input', function() {
+            const searchText = this.value.toLowerCase();
+            const notesContent = document.getElementById('notes').innerHTML;
+            
+            if (searchText.trim() === '') {
+                document.getElementById('notes').innerHTML = localStorage.getItem('savedNotes') || '';
+                return;
+            }
+            
+            const highlightedText = notesContent.replace(
+                new RegExp(searchText, 'gi'),
+                match => `<mark>${match}</mark>`
+            );
+            document.getElementById('notes').innerHTML = highlightedText;
+        });
+
+        // Автосохранение
+        document.getElementById('notes').addEventListener('input', function() {
+            localStorage.setItem('savedNotes', this.innerHTML);
+        });
+
+        // Загрузка сохранённых записок
+        window.onload = function() {
+            document.getElementById('notes').innerHTML = localStorage.getItem('savedNotes') || 'Начните писать здесь...';
+        };
+    </script>
+</body>
+</html>
